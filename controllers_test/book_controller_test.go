@@ -6,13 +6,14 @@ import (
     "net/http"
     "net/http/httptest"
     "testing"
-    "fmt"
+    //"fmt"
 
-    "github.com/gorilla/mux"
+    //"github.com/gorilla/mux"
     "github.com/stretchr/testify/assert"
     "github.com/stretchr/testify/mock"
     "go.mongodb.org/mongo-driver/bson/primitive"
     "example.com/go-mongo-app/models"
+    "example.com/go-mongo-app/controllers"
 )
 
 // ---------------------- MOCK DEL SERVICIO ----------------------
@@ -22,36 +23,17 @@ type MockBookService struct {
     mock.Mock
 }
 
-func (m *MockBookService) GetBooks() ([]models.Book, error) {
-    args := m.Called()
-    return args.Get(0).([]models.Book), args.Error(1)
-}
-func (m *MockBookService) GetBookByID(id string) (*models.Book, error) {
-
-    args := m.Called(id)
-    return args.Get(0).(*models.Book), args.Error(1)
-}
 func (m *MockBookService) AddBook(book models.Book) (*models.Book, error) {
     args := m.Called(book)
     return args.Get(0).(*models.Book), args.Error(1)
 }
-func (m *MockBookService) UpdateBook(book *models.Book) (*models.Book, error) {
-    args := m.Called(book)
-    return args.Get(0).(*models.Book), args.Error(1)
-}
-func (m *MockBookService) DeleteBookByID(id string) error {
-    args := m.Called(id)
-    return args.Error(0)
-}
-
-
 
 // ---------------------- TESTS ----------------------
 
 
 func TestCreateBook_Success(t *testing.T) {
     mockService := new(MockBookService)
-    controller := NewBookController(mockService)
+    controller := controllers.NewBookController(mockService)
 
     book := models.Book{
         Title:  "Go Programming",
@@ -81,7 +63,7 @@ func TestCreateBook_Success(t *testing.T) {
 
 func TestCreateBook_InvalidData(t *testing.T) {
     mockService := new(MockBookService)
-    controller := NewBookController(mockService)
+    controller := controllers.NewBookController(mockService)
 
     req := httptest.NewRequest("POST", "/books", bytes.NewReader([]byte("invalid json")))
     req.Header.Set("Content-Type", "application/json")

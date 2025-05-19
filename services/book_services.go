@@ -1,7 +1,7 @@
 package services
 
 import (
-    "fmt"
+    //"fmt"
     "example.com/go-mongo-app/models"
     "example.com/go-mongo-app/repositories"
 )

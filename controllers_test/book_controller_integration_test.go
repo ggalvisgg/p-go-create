@@ -3,12 +3,13 @@ package controllers_test
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	//"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"example.com/go-mongo-app/controllers"
 	"example.com/go-mongo-app/models"
 	"example.com/go-mongo-app/repositories"
 	"example.com/go-mongo-app/services"
@@ -19,14 +20,10 @@ import (
 func setupRouter() *mux.Router {
 	repo := repositories.NewBookRepository()
 	service := services.NewBookService(repo)
-	controller := NewBookController(service)
+	controller := controllers.NewBookController(service)
 
 	r := mux.NewRouter()
-	r.HandleFunc("/books", controller.GetBooks).Methods("GET")
 	r.HandleFunc("/books", controller.CreateBook).Methods("POST")
-	r.HandleFunc("/books/{id}", controller.GetBookByID).Methods("GET")
-	r.HandleFunc("/books/{id}", controller.DeleteBookByID).Methods("DELETE")
-	r.HandleFunc("/books/{id}", controller.UpdateBook).Methods("PUT")
 
 	return r
 }
